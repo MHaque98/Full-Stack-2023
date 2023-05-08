@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useState } from 'react'
 import './App.css'
@@ -5,7 +6,32 @@ import './App.css'
 import { Button } from './components/Button'
 import { Total } from './components/Total'
 
-function App() {
+// a proper place to define a component
+const Statistics = ({ good, bad, neutral }) => {
+  let total = good + bad + neutral
+  return (
+    <div>
+      <h2>Statistics</h2>
+      {total !== 0 ? (
+        <>
+          <Total name="positive" total={good} />
+          <Total name="neutral" total={neutral} />
+          <Total name="negative" total={bad} />
+          <Total name="total" total={total} />
+          <Total name="average" total={(total / 3).toFixed(2)} />
+          <Total
+            name="positive"
+            total={`${((good / total) * 100).toFixed(2)} %`}
+          />
+        </>
+      ) : (
+        <p>No feedback given</p>
+      )}
+    </div>
+  )
+}
+
+const App = () => {
   // save clicks of each button to its own state
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
@@ -35,10 +61,7 @@ function App() {
       <Button name="positive" handleClick={giveFeedback('good')} />
       <Button name="neutral" handleClick={giveFeedback('neutral')} />
       <Button name="negative" handleClick={giveFeedback('bad')} />
-      <h2>Statistics</h2>
-      <Total name="positive" total={good} />
-      <Total name="neutral" total={neutral} />
-      <Total name="negative" total={bad} />
+      <Statistics good={good} bad={bad} neutral={neutral} />
     </>
   )
 }
